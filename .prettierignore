@@ -1,0 +1,11 @@
+node_modules/
+screenshots/
+assets/
+coverage/
+lib/
+.github/
+yarn.lock
+LICENSE
+.gitignore
+.npmignore
+.eslintignore

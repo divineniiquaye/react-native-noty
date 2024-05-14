@@ -1,0 +1,24 @@
+{
+  "name": "react-native-noty-example",
+  "description": "Example app for react-native-noty",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "start": "expo start",
+    "doctor": "npx expo-doctor"
+  },
+  "dependencies": {
+    "expo": "~49.0.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/runtime": "^7.24.4",
+    "babel-plugin-module-resolver": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

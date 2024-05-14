@@ -1,0 +1,15 @@
+export const DEFAULT_DURATION = 4000;
+export const SWIPE_PIXELS_TO_CLOSE = 20;
+export const SWIPE_ANIMATION_DURATION = 200;
+export const DEFAULT_SWIPE_ENABLED = true;
+
+export enum HideTypes {
+  BACKDROP_PRESSED = 'BACKDROP_PRESSED',
+  SWIPE_COMPLETED = 'SWIPE_COMPLETED',
+  BACK_BUTTON_PRESSED = 'BACK_BUTTON_PRESSED',
+  MODAL_OVERRIDE = 'MODAL_OVERRIDE',
+  AUTO_DISMISS = 'AUTO_DISMISS',
+  PAN_DISMISS = 'PAN_DISMISS',
+}
+
+export const HideKeys = Object.keys(HideTypes) as (keyof typeof HideTypes)[];
