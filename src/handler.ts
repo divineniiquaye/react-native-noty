@@ -1,8 +1,10 @@
 import { ModalProps } from 'react-native';
 import React from 'react';
 
+import type { NotificationProps } from './notification/types';
 
-type NotyComponents = { type: 'modal'; props?: Partial<ModalProps> }
+type NotyComponents = { type: "notification", props?: NotificationProps }
+  | { type: 'modal'; props?: Partial<ModalProps> }
   ;
 
 export type ConfigProps = NotyComponents & {
@@ -23,6 +25,17 @@ const show = async <T = any>(
 ): Promise<T> => notyModalRef.current?.show<any>?.(component, config);
 
 /**
+ * @description A modal for displaying notifications (top or bottom).
+ * @param component A function that returns a {@link React.FC} to be shown.
+ * @param config Optional configuration object to override the default values.
+ * @returns  A Promise that resolves with the props passed to {@link hide} when the modal is closed.
+ */
+const notification = async <T = any>(
+  component: React.FC,
+  config?: Omit<ConfigProps, 'type' | 'props'> & NotificationProps
+): Promise<T> => notyModalRef.current?.notification<any>?.(component, config);
+
+/**
  * @description Hide the current modal.
  * @param props Those props will be passed to the {@link show} resolve function.
  * @returns {Promise<void>} Returns a promise that resolves when the close animation is finished.
@@ -39,6 +52,7 @@ export const timeout = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve as any, ms));
 
 export interface IModal {
+  notification: typeof notification;
   show: typeof show;
   hide: typeof hide;
 }
@@ -64,5 +78,6 @@ export const notyModalRef = React.createRef<IModal>();
  */
 export const Noty = {
   show,
+  notification,
   hide,
 };

@@ -27,6 +27,33 @@ export default function App() {
           contentContainerStyle={styles.contentContainer}
         >
           <Text style={styles.textTitle}>Noty Example</Text>
+          <Button
+            title="Notification (Top)"
+            onPress={async () => {
+              notyCount.current++;
+              const result = await Noty.notification(
+                () => <Text>Hello World {notyCount.current}</Text>,
+                {
+                  type: notyCount.current % 2 === 0 ? "success" : "error",
+                },
+              );
+              console.log("Result--", result);
+            }}
+          />
+          <Button
+            title="Notification (Botton)"
+            onPress={async () => {
+              notyCount.current++;
+              const result = await Noty.notification(
+                () => <Text>Hello World {notyCount.current}</Text>,
+                {
+                  position: "bottom",
+                  type: notyCount.current % 2 === 0 ? "success" : "error",
+                },
+              );
+              console.log("Result--", result);
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
     </React.Fragment>

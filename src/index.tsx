@@ -1,6 +1,7 @@
 import React from "react";
 
 import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
+import NotificationComponent from "./notification/component";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
 
 export { Noty, type ConfigProps } from "./handler";
@@ -61,7 +62,27 @@ export const NotyPortal: React.FC = () => {
   React.useImperativeHandle(notyModalRef, () => ({
     hide,
     show,
+    notification: (component, config) => {
+      return show(component, {
+        interval: config?.interval ?? DEFAULT_DURATION,
+        type: "notification",
+        props: config,
+      });
+    }
   }));
+
+  if ("notification" === config?.type) {
+    return (
+      <NotificationComponent
+        interval={config.interval ?? DEFAULT_DURATION}
+        setVisible={setIsVisible}
+        visible={isVisible}
+        content={content}
+        dismiss={hide}
+        {...config.props}
+      />
+    );
+  }
 
   return <></>;
 };
