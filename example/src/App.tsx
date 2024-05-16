@@ -1,6 +1,5 @@
 import {
   Button,
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -9,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 
-import { NotyPortal, Noty } from "react-native-noty";
+import { NotyPortal, Noty, Notification } from "react-native-noty";
 // import { NotyPortal, Noty } from "../../src/index";
 
 export default function App() {
@@ -32,10 +31,8 @@ export default function App() {
             onPress={async () => {
               notyCount.current++;
               const result = await Noty.notification(
-                () => <Text>Hello World {notyCount.current}</Text>,
-                {
-                  type: notyCount.current % 2 === 0 ? "success" : "error",
-                },
+                () => <Notification message={`Hello World ${notyCount.current}`} />,
+                { type: notyCount.current % 2 === 0 ? "success" : "error" },
               );
               console.log("Result--", result);
             }}
@@ -45,10 +42,10 @@ export default function App() {
             onPress={async () => {
               notyCount.current++;
               const result = await Noty.notification(
-                () => <Text>Hello World {notyCount.current}</Text>,
+                () => <Notification message={`Hello World ${notyCount.current}`} />,
                 {
-                  position: "bottom",
                   type: notyCount.current % 2 === 0 ? "success" : "error",
+                  position: "bottom",
                 },
               );
               console.log("Result--", result);

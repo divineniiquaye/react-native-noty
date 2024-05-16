@@ -4,6 +4,7 @@ import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
 import NotificationComponent from "./notification/component";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
 
+export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
 
 type GenericFunction = (props: any) => any;
