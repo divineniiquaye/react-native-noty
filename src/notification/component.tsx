@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   TouchableOpacity,
   Animated,
   StatusBar,
@@ -15,6 +14,7 @@ import React from "react";
 
 import { DEFAULT_SWIPE_ENABLED, HideTypes } from "../constants";
 import { NotificationColor, NotificationProps } from "./types";
+import SafeAreaView from "../safeview";
 
 type Props = NotificationProps & {
   onPress?: () => void;
@@ -37,6 +37,7 @@ const NotificationComponent: React.FC<Props> = ({
   setVisible,
   onClose,
   dismiss,
+  inactiveStatusBar,
   animatedViewStyle,
   animatedViewProps,
   panResponderEnabled = DEFAULT_SWIPE_ENABLED,
@@ -70,8 +71,14 @@ const NotificationComponent: React.FC<Props> = ({
 
   function _updateStatusBar(active = false) {
     if (!updateStatusBar) return;
-    if (position === "top" && Platform.OS === "ios") {
-      StatusBar.setBarStyle(active ? "light-content" : "default", true);
+    if (position === "top") {
+      StatusBar.setBarStyle(
+        active
+          ? "light-content"
+          : inactiveStatusBar ??
+          Platform.select({ android: "dark-content", default: "default" }),
+        true,
+      );
     }
   }
 
@@ -104,7 +111,10 @@ const NotificationComponent: React.FC<Props> = ({
 
   function _getViewAnimatedStyle() {
     let viewStyle: ViewStyle = {
-      position: "absolute",
+      position: Platform.select({
+        web: "fixed",
+        default: "absolute",
+      }) as "absolute",
       top: dimValue,
       left: 0,
       right: 0,
@@ -199,11 +209,23 @@ const NotificationComponent: React.FC<Props> = ({
     >
       <TouchableOpacity
         style={{
-          backgroundColor: alertColors?.[type] ?? NotificationColor[type] ?? "black",
+          backgroundColor:
+            alertColors?.[type] ?? NotificationColor[type] ?? "black",
+          padding: 8,
         }}
         activeOpacity={0.95}
       >
-        <SafeAreaView children={Component as any} />
+        <SafeAreaView
+          style={
+            ["web", "android"].includes(Platform.OS) &&
+            position === "bottom" && {
+              paddingVertical: 8,
+              paddingTop: 0,
+            }
+          }
+        >
+          {Component as any}
+        </SafeAreaView>
       </TouchableOpacity>
     </Animated.View>
   );
