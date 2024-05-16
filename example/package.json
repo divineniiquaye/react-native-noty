@@ -11,7 +11,7 @@
     "doctor": "npx expo-doctor"
   },
   "dependencies": {
-    "expo": "~49.0.8"
+    "expo": "~51.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",

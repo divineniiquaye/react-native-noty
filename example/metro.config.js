@@ -26,7 +26,7 @@ const modules = Object.keys({
 const config = getDefaultConfig(__dirname);
 
 config.projectRoot = __dirname;
-config.watchFolders = [root];
+config.watchFolders = [root, __dirname];
 
 config.resolver = {
   ...config.resolver,
@@ -40,16 +40,6 @@ config.resolver = {
     acc[name] = path.join(__dirname, 'node_modules', name);
     return acc;
   }, {}),
-};
-
-config.transformer = {
-  ...config.transformer,
-  getTransformOptions: async () => ({
-    transform: {
-      experimentalImportSupport: false,
-      inlineRequires: true,
-    },
-  }),
 };
 
 module.exports = config;
