@@ -1,11 +1,11 @@
-import { ModalProps } from 'react-native';
-import React from 'react';
+import { ModalProps } from "react-native";
+import React from "react";
 
-import type { NotificationProps } from './notification/types';
+import type { NotificationProps } from "./notification/types";
 
-type NotyComponents = { type: "notification", props?: NotificationProps }
-  | { type: 'modal'; props?: Partial<ModalProps> }
-  ;
+type NotyComponents =
+  | { type: "notification"; props?: NotificationProps }
+  | { type: "modal"; props?: Partial<ModalProps> };
 
 export type ConfigProps = NotyComponents & {
   /** How fast notification will appear/disappear
@@ -21,7 +21,7 @@ export type ConfigProps = NotyComponents & {
  */
 const show = async <T = any>(
   component: React.FC,
-  config?: ConfigProps | NotyComponents['type']
+  config?: ConfigProps | NotyComponents["type"],
 ): Promise<T> => notyModalRef.current?.show<any>?.(component, config);
 
 /**
@@ -32,7 +32,7 @@ const show = async <T = any>(
  */
 const notification = async <T = any>(
   component: React.FC,
-  config?: Omit<ConfigProps, 'type' | 'props'> & NotificationProps
+  config?: Omit<ConfigProps, "type" | "props"> & NotificationProps,
 ): Promise<T> => notyModalRef.current?.notification<any>?.(component, config);
 
 /**
@@ -48,8 +48,17 @@ const hide = async <T = any>(props?: T): Promise<void> =>
  * @param ms The amount of milliseconds to wait before resolving the promise.
  * @returns A promise that resolves after the given amount of time has passed.
  */
-export const timeout = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve as any, ms));
+export const timeout = (
+  ms: number,
+  ref: React.MutableRefObject<NodeJS.Timeout | null>,
+) =>
+  new Promise(
+    (resolve) =>
+      (ref.current = setTimeout(() => {
+        resolve(ms);
+        ref.current = null;
+      }, ms)),
+  );
 
 export interface IModal {
   notification: typeof notification;

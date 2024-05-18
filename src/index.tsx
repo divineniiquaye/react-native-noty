@@ -30,15 +30,15 @@ export const NotyPortal: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState<0 | 1 | 2>(0);
   const [config, setConfig] = React.useState<ConfigProps>();
 
-  const onHideRef = React.useRef<GenericFunction>(() => { });
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const onHideRef = React.useRef<GenericFunction>(() => {});
   const hide = React.useCallback<IModal["hide"]>(
     async (props) => {
       if (HideTypes.MODAL_OVERRIDE === props) {
         setIsVisible(2);
-        await timeout(60);
+        await timeout(60, timeoutRef);
       } else setIsVisible(2);
 
-      setTimeout(() => { }, config?.interval ?? DEFAULT_DURATION);
       onHideRef.current(props);
     },
     [config?.interval],
@@ -46,6 +46,7 @@ export const NotyPortal: React.FC = () => {
 
   const show = React.useCallback<IModal["show"]>(
     async (component, config: any = "modal") => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (typeof config === "string") config = { type: config };
       if (1 === isVisible) await hide(HideTypes.MODAL_OVERRIDE);
 
@@ -58,7 +59,9 @@ export const NotyPortal: React.FC = () => {
       return new Promise((resolve) => {
         onHideRef.current = resolve;
       });
-    }, [isVisible]);
+    },
+    [isVisible],
+  );
 
   React.useImperativeHandle(notyModalRef, () => ({
     hide,
@@ -69,7 +72,7 @@ export const NotyPortal: React.FC = () => {
         type: "notification",
         props: config,
       });
-    }
+    },
   }));
 
   if ("notification" === config?.type) {
@@ -80,6 +83,7 @@ export const NotyPortal: React.FC = () => {
         visible={isVisible}
         content={content}
         dismiss={hide}
+        ref={timeoutRef}
         {...config.props}
       />
     );

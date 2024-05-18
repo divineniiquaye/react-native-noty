@@ -15,6 +15,7 @@ import React from "react";
 import { DEFAULT_SWIPE_ENABLED, HideTypes } from "../constants";
 import { NotificationColor, NotificationProps } from "./types";
 import SafeAreaView from "../safeview";
+import { timeout } from "../handler";
 
 type Props = NotificationProps & {
   onPress?: () => void;
@@ -26,29 +27,32 @@ type Props = NotificationProps & {
   visible: 0 | 1 | 2;
 };
 
-const NotificationComponent: React.FC<Props> = ({
-  updateStatusBar = true,
-  content: Component,
-  type = "success",
-  position = "top",
-  alertColors,
-  interval,
-  visible,
-  setVisible,
-  onClose,
-  dismiss,
-  inactiveStatusBar,
-  animatedViewStyle,
-  animatedViewProps,
-  panResponderEnabled = DEFAULT_SWIPE_ENABLED,
-  panResponderDismissDistance = -10,
-  springAnimationConfig = {
-    toValue: 0,
-    friction: 9,
-    useNativeDriver: false,
-    isInteraction: false,
-  },
-}) => {
+const NotificationComponent = (
+  {
+    updateStatusBar = true,
+    content: Component,
+    type = "success",
+    position = "top",
+    alertColors,
+    interval,
+    visible,
+    setVisible,
+    onClose,
+    dismiss,
+    inactiveStatusBar,
+    animatedViewStyle,
+    animatedViewProps,
+    panResponderEnabled = DEFAULT_SWIPE_ENABLED,
+    panResponderDismissDistance = -10,
+    springAnimationConfig = {
+      toValue: 0,
+      friction: 9,
+      useNativeDriver: false,
+      isInteraction: false,
+    },
+  }: Props,
+  ref: React.Ref<NodeJS.Timeout | null>,
+) => {
   const windowDimensions = useWindowDimensions();
 
   const animatedValue = React.useRef(new Animated.Value(0));
@@ -76,17 +80,18 @@ const NotificationComponent: React.FC<Props> = ({
         active
           ? "light-content"
           : inactiveStatusBar ??
-          Platform.select({ android: "dark-content", default: "default" }),
+              Platform.select({ android: "dark-content", default: "default" }),
         true,
       );
     }
   }
 
-  function _dismiss(type: HideTypes | true) {
+  async function _dismiss(type: HideTypes | true) {
     _updateStatusBar(false);
     _animate(0);
     setDimValue(0);
 
+    if (HideTypes.PAN_DISMISS === type) await timeout(5, ref as any);
     if (typeof type === "string") {
       onClose?.(type);
       dismiss(type);
@@ -97,16 +102,14 @@ const NotificationComponent: React.FC<Props> = ({
 
   function _animate(toValue = 0) {
     springAnimationConfig.toValue = toValue;
-    return new Promise((resolve) => {
-      Animated.spring(animatedValue.current, springAnimationConfig).start(
-        ({ finished }) => {
-          resolve(toValue);
-          if (finished && 1 === toValue && interval > 0) {
-            setTimeout(() => _dismiss(true), interval);
-          }
-        },
-      );
-    });
+    Animated.spring(animatedValue.current, springAnimationConfig).start(
+      async ({ finished }) => {
+        if (finished && 1 === toValue && interval > 0) {
+          await timeout(interval, ref as any);
+          _dismiss(true);
+        }
+      },
+    );
   }
 
   function _getViewAnimatedStyle() {
@@ -231,4 +234,4 @@ const NotificationComponent: React.FC<Props> = ({
   );
 };
 
-export default NotificationComponent;
+export default React.forwardRef(NotificationComponent);
