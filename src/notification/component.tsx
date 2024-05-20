@@ -13,14 +13,14 @@ import {
 import React from "react";
 
 import { DEFAULT_SWIPE_ENABLED, HideTypes } from "../constants";
-import { NotificationColor, NotificationProps } from "./types";
+import { NotificationProps } from "./types";
+import { ToastColor } from "../toast/types";
 import SafeAreaView from "../safeview";
 import { timeout } from "../handler";
 
 type Props = NotificationProps & {
   onPress?: () => void;
   setVisible: (visible: 0 | 1 | 2) => void;
-  onClose?: (type: HideTypes) => void;
   dismiss: (props?: any) => void;
   content: React.FC;
   interval: number;
@@ -37,7 +37,6 @@ const NotificationComponent = (
     interval,
     visible,
     setVisible,
-    onClose,
     dismiss,
     inactiveStatusBar,
     animatedViewStyle,
@@ -93,7 +92,6 @@ const NotificationComponent = (
 
     if (HideTypes.PAN_DISMISS === type) await timeout(5, ref as any);
     if (typeof type === "string") {
-      onClose?.(type);
       dismiss(type);
     } else {
       setVisible(0);
@@ -212,9 +210,8 @@ const NotificationComponent = (
     >
       <TouchableOpacity
         style={{
-          backgroundColor:
-            alertColors?.[type] ?? NotificationColor[type] ?? "black",
           padding: 8,
+          backgroundColor: alertColors?.[type] ?? ToastColor[type] ?? "black",
         }}
         activeOpacity={0.95}
       >

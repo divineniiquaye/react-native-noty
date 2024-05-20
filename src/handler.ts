@@ -3,10 +3,12 @@ import React from "react";
 import type { NotificationProps } from "./notification/types";
 import { NotificationViewProps } from "./notification";
 import { ModalProps } from "./modal/types";
+import { ToastProps } from "./toast/types";
 
 type NotyComponents =
   | { type: "notification"; props?: NotificationProps }
-  | { type: "modal"; props?: ModalProps };
+  | { type: "modal"; props?: ModalProps }
+  | { type: "toast"; props?: ToastProps };
 
 export type ConfigProps = NotyComponents & {
   /** How fast notification will appear/disappear
@@ -48,6 +50,17 @@ const modal = async <T = any>(
 ): Promise<T> => notyModalRef.current?.modal<any>?.(component, config);
 
 /**
+ * @description A modal for displaying toast (top, center or bottom).
+ * @param component A function that returns a {@link React.FC} or string to be shown.
+ * @param config Optional configuration object to override the default values.
+ * @returns  A Promise that resolves with the props passed to {@link hide} when the modal is closed.
+ */
+const toast = async <T = any>(
+  component: React.FC | string,
+  config?: ToastProps | "top" | "center" | "bottom",
+): Promise<T> => notyModalRef.current?.toast<any>?.(component, config);
+
+/**
  * @description Hide the current modal.
  * @param props Those props will be passed to the {@link show} resolve function.
  * @returns {Promise<void>} Returns a promise that resolves when the close animation is finished.
@@ -75,6 +88,7 @@ export const timeout = (
 export interface IModal {
   notification: typeof notification;
   modal: typeof modal;
+  toast: typeof toast;
   show: typeof show;
   hide: typeof hide;
 }
@@ -101,6 +115,7 @@ export const notyModalRef = React.createRef<IModal>();
 export const Noty = {
   show,
   modal,
+  toast,
   notification,
   hide,
 };

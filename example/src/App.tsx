@@ -70,6 +70,27 @@ export default function App() {
               console.log("Result--", result);
             }}
           />
+          <Button
+            title="Toast (Center)"
+            onPress={async () => {
+              notyCount.current++;
+              const result = await Noty.toast("Hello World Toast", {
+                type: notyCount.current % 2 === 0 ? "success" : "error",
+              });
+              console.log("Result--", result);
+            }}
+          />
+          <Button
+            title="Toast (Top or Bottom)"
+            onPress={async () => {
+              notyCount.current++;
+              const result = await Noty.toast(
+                "Hello World Toast Example",
+                notyCount.current % 2 === 0 ? "top" : "bottom",
+              );
+              console.log("Result--", result);
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
     </React.Fragment>

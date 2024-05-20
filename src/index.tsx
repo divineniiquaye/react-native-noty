@@ -1,3 +1,4 @@
+import { Text } from "react-native";
 import React from "react";
 
 import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
@@ -5,6 +6,7 @@ import { DEFAULT_DURATION, HideTypes } from "./constants";
 import NotificationComponent from "./notification/component";
 import { Notification } from "./notification";
 import ModalComponent from "./modal/component";
+import ToastComponent from "./toast/component";
 
 export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
@@ -68,6 +70,25 @@ export const NotyPortal: React.FC = () => {
   React.useImperativeHandle(notyModalRef, () => ({
     hide,
     show,
+    toast: (component, config) =>
+      show(
+        typeof component === "function"
+          ? component
+          : () => (
+              <Text
+                style={{ fontSize: 14, textAlign: "center", color: "white" }}
+                children={component}
+                numberOfLines={3}
+              />
+            ),
+        typeof config === "string"
+          ? { type: "toast", props: { position: config } }
+          : {
+              interval: config?.interval ?? DEFAULT_DURATION,
+              type: "toast",
+              props: config,
+            },
+      ),
     modal: (component, config) =>
       show(typeof component === "function" ? component : () => component, {
         type: "modal",
@@ -89,6 +110,20 @@ export const NotyPortal: React.FC = () => {
   if ("notification" === config?.type) {
     return (
       <NotificationComponent
+        interval={config.interval ?? DEFAULT_DURATION}
+        setVisible={setIsVisible}
+        visible={isVisible}
+        content={content}
+        dismiss={hide}
+        ref={timeoutRef}
+        {...config.props}
+      />
+    );
+  }
+
+  if ("toast" === config?.type) {
+    return (
+      <ToastComponent
         interval={config.interval ?? DEFAULT_DURATION}
         setVisible={setIsVisible}
         visible={isVisible}
