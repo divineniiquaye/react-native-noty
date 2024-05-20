@@ -2,6 +2,7 @@ import { ModalProps } from "react-native";
 import React from "react";
 
 import type { NotificationProps } from "./notification/types";
+import { NotificationViewProps } from "./notification";
 
 type NotyComponents =
   | { type: "notification"; props?: NotificationProps }
@@ -31,7 +32,7 @@ const show = async <T = any>(
  * @returns  A Promise that resolves with the props passed to {@link hide} when the modal is closed.
  */
 const notification = async <T = any>(
-  component: React.FC,
+  component: React.FC | NotificationViewProps,
   config?: Omit<ConfigProps, "type" | "props"> & NotificationProps,
 ): Promise<T> => notyModalRef.current?.notification<any>?.(component, config);
 

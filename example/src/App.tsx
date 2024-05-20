@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 
-import { NotyPortal, Noty, Notification } from "react-native-noty";
+import { NotyPortal, Noty } from "react-native-noty";
 // import { NotyPortal, Noty } from "../../src/index";
 
 export default function App() {
@@ -31,7 +31,7 @@ export default function App() {
             onPress={async () => {
               notyCount.current++;
               const result = await Noty.notification(
-                () => <Notification message={`Hello World ${notyCount.current}`} />,
+                { message: `Hello World ${notyCount.current}` },
                 { type: notyCount.current % 2 === 0 ? "success" : "error" },
               );
               console.log("Result--", result);
@@ -42,7 +42,7 @@ export default function App() {
             onPress={async () => {
               notyCount.current++;
               const result = await Noty.notification(
-                () => <Notification message={`Hello World ${notyCount.current}`} />,
+                { message: `Hello World ${notyCount.current}` },
                 {
                   type: notyCount.current % 2 === 0 ? "success" : "error",
                   position: "bottom",
@@ -90,5 +90,5 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: 16,
     marginTop: 50,
-  }
+  },
 });

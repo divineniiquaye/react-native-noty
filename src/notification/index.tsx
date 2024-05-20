@@ -1,7 +1,7 @@
 import { Image, ImageProps, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-type Props = {
+export type NotificationViewProps = {
   title?: string;
   message?: string;
   image?: ImageProps['source'],
@@ -12,7 +12,7 @@ type Props = {
   imageProps?: Omit<ImageProps, 'source'>;
 }
 
-export const Notification: React.FC<Props> = (props) => {
+export const Notification: React.FC<NotificationViewProps> = (props) => {
   const { style: imageStyle, ...imageProps } = props?.imageProps ?? { style: styles.image };
   const { style: titleStyle, ...titleTextProps } = props?.titleProps ?? { style: styles.title };
   const { style: messageStyle, ...messageTextProps } = props?.messageProps ?? { style: styles.message };

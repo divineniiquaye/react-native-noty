@@ -3,6 +3,7 @@ import React from "react";
 import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
 import NotificationComponent from "./notification/component";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
+import { Notification } from "./notification";
 
 export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
@@ -66,13 +67,17 @@ export const NotyPortal: React.FC = () => {
   React.useImperativeHandle(notyModalRef, () => ({
     hide,
     show,
-    notification: (component, config) => {
-      return show(component, {
-        interval: config?.interval ?? DEFAULT_DURATION,
-        type: "notification",
-        props: config,
-      });
-    },
+    notification: (component, config) =>
+      show(
+        typeof component === "function"
+          ? component
+          : () => <Notification {...component} />,
+        {
+          interval: config?.interval ?? DEFAULT_DURATION,
+          type: "notification",
+          props: config,
+        },
+      ),
   }));
 
   if ("notification" === config?.type) {
