@@ -1,12 +1,12 @@
 import React from "react";
 import {
+  SafeAreaView as SafeAreaBase,
   StyleSheet,
-  View,
-  SafeAreaView,
   Dimensions,
-  Platform,
   ScaledSize,
+  Platform,
   ViewProps,
+  View,
 } from "react-native";
 
 const isIOS10 =
@@ -15,7 +15,7 @@ const isIOS10 =
 
 const s = StyleSheet.create({
   statusBarPadding: {
-    paddingTop: 30,
+    paddingTop: 40,
   },
 });
 
@@ -54,6 +54,5 @@ class StatusBarSpacer extends React.Component<ViewProps, StatusBarSpacerState> {
   }
 }
 
-export default isIOS10 || Platform.OS === "android"
-  ? StatusBarSpacer
-  : SafeAreaView;
+const SafeAreaView = isIOS10 || Platform.OS === "android" ? StatusBarSpacer : SafeAreaBase;
+export default SafeAreaView;
