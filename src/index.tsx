@@ -1,9 +1,10 @@
 import React from "react";
 
 import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
-import NotificationComponent from "./notification/component";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
+import NotificationComponent from "./notification/component";
 import { Notification } from "./notification";
+import ModalComponent from "./modal/component";
 
 export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
@@ -67,6 +68,11 @@ export const NotyPortal: React.FC = () => {
   React.useImperativeHandle(notyModalRef, () => ({
     hide,
     show,
+    modal: (component, config) =>
+      show(typeof component === "function" ? component : () => component, {
+        type: "modal",
+        props: typeof config === "string" ? { position: config } : config,
+      }),
     notification: (component, config) =>
       show(
         typeof component === "function"
@@ -89,6 +95,21 @@ export const NotyPortal: React.FC = () => {
         content={content}
         dismiss={hide}
         ref={timeoutRef}
+        {...config.props}
+      />
+    );
+  }
+
+  if ("modal" === config?.type) {
+    return (
+      <ModalComponent
+        onBackButtonPress={() => {
+          hide(HideTypes.BACK_BUTTON_PRESSED);
+          return true;
+        }}
+        onBackdropPress={() => hide(HideTypes.BACKDROP_PRESSED)}
+        visible={isVisible}
+        content={content}
         {...config.props}
       />
     );

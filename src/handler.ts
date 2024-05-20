@@ -1,12 +1,12 @@
-import { ModalProps } from "react-native";
 import React from "react";
 
 import type { NotificationProps } from "./notification/types";
 import { NotificationViewProps } from "./notification";
+import { ModalProps } from "./modal/types";
 
 type NotyComponents =
   | { type: "notification"; props?: NotificationProps }
-  | { type: "modal"; props?: Partial<ModalProps> };
+  | { type: "modal"; props?: ModalProps };
 
 export type ConfigProps = NotyComponents & {
   /** How fast notification will appear/disappear
@@ -37,6 +37,17 @@ const notification = async <T = any>(
 ): Promise<T> => notyModalRef.current?.notification<any>?.(component, config);
 
 /**
+ * @description A modal for displaying notifications (top, center or bottom).
+ * @param component A function that returns a {@link React.FC} or {@link React.ReactNode} to be shown.
+ * @param config Optional configuration object to override the default values.
+ * @returns  A Promise that resolves with the props passed to {@link hide} when the modal is closed.
+ */
+const modal = async <T = any>(
+  component: React.FC | React.ReactNode,
+  config?: ModalProps | "top" | "center" | "bottom",
+): Promise<T> => notyModalRef.current?.modal<any>?.(component, config);
+
+/**
  * @description Hide the current modal.
  * @param props Those props will be passed to the {@link show} resolve function.
  * @returns {Promise<void>} Returns a promise that resolves when the close animation is finished.
@@ -55,14 +66,15 @@ export const timeout = (
 ) =>
   new Promise(
     (resolve) =>
-      (ref.current = setTimeout(() => {
-        resolve(ms);
-        ref.current = null;
-      }, ms)),
+    (ref.current = setTimeout(() => {
+      resolve(ms);
+      ref.current = null;
+    }, ms)),
   );
 
 export interface IModal {
   notification: typeof notification;
+  modal: typeof modal;
   show: typeof show;
   hide: typeof hide;
 }
@@ -88,6 +100,7 @@ export const notyModalRef = React.createRef<IModal>();
  */
 export const Noty = {
   show,
+  modal,
   notification,
   hide,
 };

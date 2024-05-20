@@ -9,6 +9,7 @@ import {
 import React from "react";
 
 import { NotyPortal, Noty } from "react-native-noty";
+import { ExampleModal } from "./components/ExampleModal";
 // import { NotyPortal, Noty } from "../../src/index";
 
 export default function App() {
@@ -51,6 +52,24 @@ export default function App() {
               console.log("Result--", result);
             }}
           />
+          <Button
+            title="Modal (Center)"
+            onPress={async () => {
+              const result = await Noty.modal(ExampleModal);
+              console.log("Result--", result);
+            }}
+          />
+          <Button
+            title="Modal (Top or Bottom)"
+            onPress={async () => {
+              notyCount.current++;
+              const result = await Noty.modal(
+                ExampleModal,
+                notyCount.current % 2 === 0 ? "top" : "bottom",
+              );
+              console.log("Result--", result);
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
     </React.Fragment>
@@ -63,23 +82,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flex: 1,
   },
-  headerContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 12,
-  },
   contentContainer: {
     paddingTop: 20,
-    // paddingVertical: 50,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    justifyContent: "center",
-    borderRadius: 25,
-    maxHeight: 500,
-    paddingHorizontal: 30,
   },
   textTitle: {
     fontSize: 20,
