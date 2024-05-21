@@ -90,7 +90,6 @@ const NotificationComponent = (
     _animate(0);
     setDimValue(0);
 
-    if (HideTypes.PAN_DISMISS === type) await timeout(5, ref as any);
     if (typeof type === "string") {
       dismiss(type);
     } else {
@@ -104,7 +103,7 @@ const NotificationComponent = (
       async ({ finished }) => {
         if (finished && 1 === toValue && interval > 0) {
           await timeout(interval, ref as any);
-          _dismiss(true);
+          _dismiss(HideTypes.AUTO_DISMISS);
         }
       },
     );

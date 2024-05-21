@@ -50,7 +50,7 @@ const ToastComponent = (
         if (finished && 1 === toValue && interval > 0) {
           await timeout(interval, ref as any);
           _animate(0); // animation before dismiss
-          dismiss(HideTypes.TOAST_DISMISS);
+          dismiss(HideTypes.AUTO_DISMISS);
         }
       },
     );
