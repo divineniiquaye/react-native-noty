@@ -4,10 +4,12 @@ import React from "react";
 import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
 import NotificationComponent from "./notification/component";
+import PopOverComponent from "./popover/component";
 import { Notification } from "./notification";
 import ModalComponent from "./modal/component";
 import ToastComponent from "./toast/component";
 
+export { PopOver } from "./popover";
 export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
 
@@ -33,9 +35,10 @@ export const NotyPortal: React.FC = () => {
   const [content, setContent] = React.useState<React.FC>(() => <></>);
   const [isVisible, setIsVisible] = React.useState<0 | 1 | 2>(0);
   const [config, setConfig] = React.useState<ConfigProps>();
+  const popOverRef = React.useRef<object[]>([]);
 
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const onHideRef = React.useRef<GenericFunction>(() => {});
+  const onHideRef = React.useRef<GenericFunction>(() => { });
   const hide = React.useCallback<IModal["hide"]>(
     async (props) => {
       if (HideTypes.MODAL_OVERRIDE === props) {
@@ -75,19 +78,19 @@ export const NotyPortal: React.FC = () => {
         typeof component === "function"
           ? component
           : () => (
-              <Text
-                style={{ fontSize: 14, textAlign: "center", color: "white" }}
-                children={component}
-                numberOfLines={3}
-              />
-            ),
+            <Text
+              style={{ fontSize: 14, textAlign: "center", color: "white" }}
+              children={component}
+              numberOfLines={3}
+            />
+          ),
         typeof config === "string"
           ? { type: "toast", props: { position: config } }
           : {
-              interval: config?.interval ?? DEFAULT_DURATION,
-              type: "toast",
-              props: config,
-            },
+            interval: config?.interval ?? DEFAULT_DURATION,
+            type: "toast",
+            props: config,
+          },
       ),
     modal: (component, config) =>
       show(typeof component === "function" ? component : () => component, {
@@ -105,6 +108,32 @@ export const NotyPortal: React.FC = () => {
           props: config,
         },
       ),
+    popover: async (id, config) => {
+      if (config) {
+        if (Array.isArray(id)) {
+          throw new Error("Registering an array of ids is not supported");
+        }
+
+        popOverRef.current.push({ id, ...config });
+      } else {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        if (1 === isVisible) await hide(HideTypes.MODAL_OVERRIDE);
+
+        React.startTransition(() => {
+          setConfig(
+            typeof id === "string" //@ts-ignore
+              ? [popOverRef.current.find((v) => v.id === id)] //@ts-ignore
+              : (popOverRef.current.filter((v) => id.includes(v.id)) as any),
+          );
+
+          setIsVisible(1);
+        });
+      }
+
+      return new Promise((resolve) => {
+        onHideRef.current = resolve;
+      });
+    },
   }));
 
   if ("notification" === config?.type) {
@@ -146,6 +175,17 @@ export const NotyPortal: React.FC = () => {
         visible={isVisible}
         content={content}
         {...config.props}
+      />
+    );
+  }
+
+  if (Array.isArray(config)) {
+    return (
+      <PopOverComponent
+        config={config as any}
+        visible={isVisible}
+        dismiss={hide}
+        ref={timeoutRef}
       />
     );
   }

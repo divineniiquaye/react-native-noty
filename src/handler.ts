@@ -2,6 +2,7 @@ import React from "react";
 
 import type { NotificationProps } from "./notification/types";
 import { NotificationViewProps } from "./notification";
+import type { PopOverProps } from "./popover";
 import { ModalProps } from "./modal/types";
 import { ToastProps } from "./toast/types";
 
@@ -60,6 +61,11 @@ const toast = async <T = any>(
   config?: ToastProps | "top" | "center" | "bottom",
 ): Promise<T> => notyModalRef.current?.toast<any>?.(component, config);
 
+const popover = async <T = any>(
+  id: string | string[],
+  config?: Omit<PopOverProps, "id" | "active" | "onShown" | "children">,
+): Promise<T> => notyModalRef.current?.popover<any>?.(id, config);
+
 /**
  * @description Hide the current modal.
  * @param props Those props will be passed to the {@link show} resolve function.
@@ -79,14 +85,15 @@ export const timeout = (
 ) =>
   new Promise(
     (resolve) =>
-    (ref.current = setTimeout(() => {
-      resolve(ms);
-      ref.current = null;
-    }, ms)),
+      (ref.current = setTimeout(() => {
+        resolve(ms);
+        ref.current = null;
+      }, ms)),
   );
 
 export interface IModal {
   notification: typeof notification;
+  popover: typeof popover;
   modal: typeof modal;
   toast: typeof toast;
   show: typeof show;
@@ -116,6 +123,7 @@ export const Noty = {
   show,
   modal,
   toast,
+  popover,
   notification,
   hide,
 };

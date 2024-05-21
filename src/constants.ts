@@ -10,6 +10,7 @@ export enum HideTypes {
   MODAL_OVERRIDE = 'MODAL_OVERRIDE',
   AUTO_DISMISS = 'AUTO_DISMISS',
   PAN_DISMISS = 'PAN_DISMISS',
+  PRESSED = 'PRESSED',
 }
 
 export const HideKeys = Object.keys(HideTypes) as (keyof typeof HideTypes)[];
