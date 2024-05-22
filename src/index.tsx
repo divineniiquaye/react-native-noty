@@ -1,13 +1,19 @@
 import { Text } from "react-native";
 import React from "react";
 
-import { ConfigProps, IModal, notyModalRef, timeout } from "./handler";
 import { DEFAULT_DURATION, HideTypes } from "./constants";
 import NotificationComponent from "./notification/component";
 import PopOverComponent from "./popover/component";
 import { Notification } from "./notification";
 import ModalComponent from "./modal/component";
 import ToastComponent from "./toast/component";
+import {
+  type ConfigProps,
+  type IModal,
+  type Timeout,
+  notyModalRef,
+  timeout,
+} from "./handler";
 
 export { PopOver } from "./popover";
 export { Notification } from "./notification";
@@ -37,8 +43,8 @@ export const NotyPortal: React.FC = () => {
   const [config, setConfig] = React.useState<ConfigProps>();
   const popOverRef = React.useRef<object[]>([]);
 
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const onHideRef = React.useRef<GenericFunction>(() => { });
+  const timeoutRef = React.useRef<Timeout>(null);
+  const onHideRef = React.useRef<GenericFunction>(() => {});
   const hide = React.useCallback<IModal["hide"]>(
     async (props) => {
       if (HideTypes.MODAL_OVERRIDE === props) {
@@ -78,19 +84,19 @@ export const NotyPortal: React.FC = () => {
         typeof component === "function"
           ? component
           : () => (
-            <Text
-              style={{ fontSize: 14, textAlign: "center", color: "white" }}
-              children={component}
-              numberOfLines={3}
-            />
-          ),
+              <Text
+                style={{ fontSize: 14, textAlign: "center", color: "white" }}
+                children={component}
+                numberOfLines={3}
+              />
+            ),
         typeof config === "string"
           ? { type: "toast", props: { position: config } }
           : {
-            interval: config?.interval ?? DEFAULT_DURATION,
-            type: "toast",
-            props: config,
-          },
+              interval: config?.interval ?? DEFAULT_DURATION,
+              type: "toast",
+              props: config,
+            },
       ),
     modal: (component, config) =>
       show(typeof component === "function" ? component : () => component, {

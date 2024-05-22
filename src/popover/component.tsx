@@ -3,7 +3,7 @@ import {
   BackHandler,
   Dimensions,
   Easing,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   Modal,
   StyleSheet,
   Text,
@@ -16,9 +16,9 @@ import React from "react";
 
 import { HideTypes } from "../constants";
 import { getCoordinates, getPosition, RENDER_BOUNDARY } from "./utils";
-import type { PopOverProps } from ".";
+import { type Timeout, timeout } from "../handler";
 import SafeAreaView from "../safeview";
-import { timeout } from "../handler";
+import type { PopOverProps } from ".";
 
 type Config = Omit<PopOverProps, "active" | "onDismiss"> & {
   layout: LayoutChangeEvent["nativeEvent"]["layout"];
@@ -34,7 +34,7 @@ type Props = {
 
 const PopOverComponent = (
   { config = [], visible, dismiss }: Props,
-  ref: React.Ref<NodeJS.Timeout | null>,
+  ref: React.Ref<Timeout>,
 ) => {
   const [state, setState] = React.useState<Record<string, any>>({ next: 0 });
   const theme = useColorScheme();
@@ -54,7 +54,7 @@ const PopOverComponent = (
     style,
     children,
     onPress,
-  } = React.useDeferredValue(config[state.next]);
+  } = React.useDeferredValue(config[state.next] as Config);
 
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener(

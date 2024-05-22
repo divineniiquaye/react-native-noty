@@ -1,10 +1,10 @@
 import React from "react";
 
 import type { NotificationProps } from "./notification/types";
-import { NotificationViewProps } from "./notification";
+import type { NotificationViewProps } from "./notification";
+import type { ModalProps } from "./modal/types";
+import type { ToastProps } from "./toast/types";
 import type { PopOverProps } from "./popover";
-import { ModalProps } from "./modal/types";
-import { ToastProps } from "./toast/types";
 
 type NotyComponents =
   | { type: "notification"; props?: NotificationProps }
@@ -16,6 +16,9 @@ export type ConfigProps = NotyComponents & {
    * @default 4000 */
   interval?: number;
 };
+
+/** Same as NodeJS.Timeout to avoid build errors */
+export type Timeout = ReturnType<typeof setTimeout> | null;
 
 /**
  * @description Shows a modal. If a modal is already present, it will be closed before displaying the new one.
@@ -79,10 +82,7 @@ const hide = async <T = any>(props?: T): Promise<void> =>
  * @param ms The amount of milliseconds to wait before resolving the promise.
  * @returns A promise that resolves after the given amount of time has passed.
  */
-export const timeout = (
-  ms: number,
-  ref: React.MutableRefObject<NodeJS.Timeout | null>,
-) =>
+export const timeout = (ms: number, ref: React.MutableRefObject<Timeout>) =>
   new Promise(
     (resolve) =>
       (ref.current = setTimeout(() => {

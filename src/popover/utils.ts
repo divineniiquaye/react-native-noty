@@ -1,4 +1,4 @@
-import { Dimensions, StatusBar, UIManager, ViewStyle } from "react-native";
+import { Dimensions, StatusBar, UIManager } from "react-native";
 
 export const TOP_OFFSET = 15;
 export const ARROW_WIDTH = 20;
@@ -21,7 +21,7 @@ export type Coordinates = {
 export async function getCoordinates(target: number): Promise<Coordinates> {
   const coordinates = new Promise((resolve) => {
     function measure() {
-      UIManager.measure(target, (x, y, width, height, px, py) => {
+      UIManager.measure(target, (x, _y, width, height, px, py) => {
         py = py + (StatusBar?.currentHeight ?? 0);
 
         if (isNaN(x)) {

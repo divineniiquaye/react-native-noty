@@ -3,20 +3,20 @@ import {
   Animated,
   StatusBar,
   PanResponder,
-  ViewStyle,
-  GestureResponderEvent,
-  PanResponderGestureState,
-  LayoutChangeEvent,
+  type ViewStyle,
+  type GestureResponderEvent,
+  type PanResponderGestureState,
+  type LayoutChangeEvent,
   Platform,
   useWindowDimensions,
 } from "react-native";
 import React from "react";
 
 import { DEFAULT_SWIPE_ENABLED, HideTypes } from "../constants";
-import { NotificationProps } from "./types";
+import { type Timeout, timeout } from "../handler";
+import type { NotificationProps } from "./types";
 import { ToastColor } from "../toast/types";
 import SafeAreaView from "../safeview";
-import { timeout } from "../handler";
 
 type Props = NotificationProps & {
   onPress?: () => void;
@@ -50,7 +50,7 @@ const NotificationComponent = (
       isInteraction: false,
     },
   }: Props,
-  ref: React.Ref<NodeJS.Timeout | null>,
+  ref: React.Ref<Timeout>,
 ) => {
   const windowDimensions = useWindowDimensions();
 

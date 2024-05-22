@@ -1,4 +1,30 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
-  "exclude": ["babel.config.js", ".eslintrc.js", ".prettierrc.js"]
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "react-native-noty": ["./src/index"]
+    },
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-native",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noStrictGenericChecks": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "outDir": "dist"
+  }
 }

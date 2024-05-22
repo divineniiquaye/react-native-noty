@@ -1,10 +1,10 @@
-import { Animated, Platform, ViewStyle } from "react-native";
+import { Animated, Platform, type ViewStyle } from "react-native";
 import React from "react";
 
 import { DEFAULT_DURATION, HideTypes } from "../constants";
-import { ToastColor, ToastProps } from "./types";
+import { ToastColor, type ToastProps } from "./types";
+import { type Timeout, timeout } from "../handler";
 import SafeAreaView from "../safeview";
-import { timeout } from "../handler";
 
 type Props = ToastProps & {
   setVisible: (visible: 0 | 1 | 2) => void;
@@ -21,7 +21,6 @@ const ToastComponent = (
     type = "default",
     alertColors,
     visible,
-    setVisible,
     dismiss,
     animatedViewProps,
     animatedViewStyle,
@@ -31,9 +30,8 @@ const ToastComponent = (
       useNativeDriver: false,
       isInteraction: false,
     },
-    ...props
   }: Props,
-  ref: React.Ref<NodeJS.Timeout | null>,
+  ref: React.Ref<Timeout>,
 ) => {
   const animatedValue = React.useRef(new Animated.Value(0));
 
@@ -103,7 +101,11 @@ const ToastComponent = (
   return (
     <SafeAreaView style={_getSafeAreaStyle()}>
       {1 === visible && (
-        <Animated.View style={_getViewAnimatedStyle()} pointerEvents="box-none">
+        <Animated.View
+          style={_getViewAnimatedStyle()}
+          pointerEvents="box-none"
+          {...animatedViewProps}
+        >
           {Component as any}
         </Animated.View>
       )}

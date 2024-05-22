@@ -1,5 +1,5 @@
-import { StatusBarStyle } from "react-native";
-import { ToastProps } from "../toast/types";
+import type { StatusBarStyle } from "react-native";
+import type { ToastProps } from "../toast/types";
 
 export type NotificationProps = Omit<ToastProps, "position" | "interval"> & {
   position?: "top" | "bottom";

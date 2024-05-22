@@ -3,9 +3,9 @@ import {
   SafeAreaView as SafeAreaBase,
   StyleSheet,
   Dimensions,
-  ScaledSize,
+  type ScaledSize,
   Platform,
-  ViewProps,
+  type ViewProps,
   View,
 } from "react-native";
 

@@ -1,4 +1,4 @@
-import { Image, ImageProps, StyleSheet, Text, View } from "react-native";
+import { Image, type ImageProps, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 export type NotificationViewProps = {

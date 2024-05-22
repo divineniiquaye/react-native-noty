@@ -1,4 +1,4 @@
-import { Animated, Appearance, ColorValue, View } from "react-native";
+import { Animated, Appearance, type ColorValue, View } from "react-native";
 
 export const ToastColor = {
   default: "dark" === Appearance.getColorScheme() ? "#1B2534" : "#636975",

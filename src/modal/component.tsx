@@ -1,5 +1,5 @@
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
   Modal,
   Pressable,
@@ -10,7 +10,7 @@ import {
 import React from "react";
 
 import SafeAreaView from "../safeview";
-import { ModalProps } from "./types";
+import type { ModalProps } from "./types";
 
 type Props = ModalProps & {
   onBackdropPress: (event: GestureResponderEvent) => void;
