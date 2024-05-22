@@ -1,0 +1,5 @@
+
+{
+  "extends": "./tsconfig",
+  "exclude": ["example", "src/__tests__", "docs", "jest.config.ts"],
+}
