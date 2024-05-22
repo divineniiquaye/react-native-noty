@@ -4,7 +4,7 @@
   "description": "Fast and simple notify for react native (expo supported)",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
-  "types": "lib/typescript",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "scripts": {
@@ -43,6 +43,7 @@
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
+  "files": ["src", "lib", "LICENSE"],
   "release-it": {
     "git": {
       "commitMessage": "chore: release ${version}",
