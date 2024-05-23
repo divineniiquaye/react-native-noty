@@ -45,6 +45,7 @@ const PopOverComponent = (
 
   const {
     activeItemStyle = {},
+    clearItemStyle = {},
     dismissible = true,
     overlayOpacity = 0.6,
     interval = 0,
@@ -167,7 +168,7 @@ const PopOverComponent = (
                   "dark" === theme
                     ? "rgba(255, 255, 255, 0.7)"
                     : "rgba(0, 0, 0, 0.9)",
-                fontSize: 16,
+                fontSize: 14,
               }}
               children={content}
             />
@@ -180,7 +181,7 @@ const PopOverComponent = (
                   color:
                     "dark" === theme ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)",
                   fontWeight: "500",
-                  fontSize: 17.4,
+                  fontSize: 16,
                 }}
                 children={content.title}
               />
@@ -191,7 +192,7 @@ const PopOverComponent = (
                       "dark" == theme
                         ? "rgba(255, 255, 255, 0.9)"
                         : "rgba(0, 0, 0, 0.9)",
-                    fontSize: 16,
+                    fontSize: 14,
                     marginTop: 8,
                   }}
                   children={content.body}
@@ -282,13 +283,8 @@ const PopOverComponent = (
       style: [
         // @ts-ignore
         children.props?.style,
-        {
-          margin: 0,
-          bottom: 0,
-          right: 0,
-          left: 0,
-          top: 0,
-        },
+        {  bottom: 0,right: 0,left: 0,top: 0 },
+        clearItemStyle,
       ],
     });
 

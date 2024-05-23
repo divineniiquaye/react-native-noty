@@ -19,6 +19,9 @@ export type PopOverProps = React.PropsWithChildren<{
   /** Style for the item when the popover is open. */
   activeItemStyle?: View["props"]["style"];
 
+  /** Styles to override the children style in popover when opened. */
+  clearItemStyle?: View["props"]["style"];
+
   /** The content of the popover. */
   content: React.FC | string | { title: string; body: React.FC | string };
 

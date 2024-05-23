@@ -49,7 +49,6 @@ export const Notification: React.FC<NotificationViewProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    flexDirection: "row",
     alignItems: "center",
   },
   image: {
