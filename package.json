@@ -1,6 +1,6 @@
 {
   "name": "react-native-noty",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Fast and simple notify for react native (expo supported)",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
