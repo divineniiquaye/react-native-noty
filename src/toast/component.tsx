@@ -59,11 +59,9 @@ const ToastComponent = (
       flex: 0,
       // fixed is available on web.
       position: (Platform.OS === "web" ? "fixed" : "absolute") as "absolute",
-      top: "top" === position ? 0 : "center" === position ? "42%" : undefined,
-      bottom: "bottom" === position ? 0 : undefined,
+      top: "top" === position ? "5%" : "center" === position ? "42%" : undefined,
+      bottom: "bottom" === position ? "10%" : undefined,
       alignSelf: "center",
-      elevation: 999_999,
-      maxWidth: "90%",
       zIndex: 999_999,
       ...(Platform.OS === "web"
         ? { overflow: "hidden", userSelect: "none" }
