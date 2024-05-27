@@ -28,7 +28,6 @@ type Config = Omit<PopOverProps, "active" | "onDismiss"> & {
 type Props = {
   config: Config[];
   dismiss: (props?: any) => void;
-  onPress?: () => void;
   visible: 0 | 1 | 2;
 };
 
@@ -70,7 +69,7 @@ const PopOverComponent = (
 
   React.useEffect(() => {
     if (1 == visible) _animateIn();
-  }, [visible, target]);
+  }, [visible, state]);
 
   async function _onLayout(e: LayoutChangeEvent) {
     if (state?.tipHasProps) return;
@@ -283,7 +282,7 @@ const PopOverComponent = (
       style: [
         // @ts-ignore
         children.props?.style,
-        {  bottom: 0,right: 0,left: 0,top: 0 },
+        { bottom: 0, right: 0, left: 0, top: 0 },
         clearItemStyle,
       ],
     });

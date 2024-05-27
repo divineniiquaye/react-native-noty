@@ -41,7 +41,7 @@ export const NotyPortal: React.FC = () => {
   const [content, setContent] = React.useState<React.FC>(() => <></>);
   const [isVisible, setIsVisible] = React.useState<0 | 1 | 2>(0);
   const [config, setConfig] = React.useState<ConfigProps>();
-  const popOverRef = React.useRef<object[]>([]);
+  const popOverRef = React.useRef<Record<string, any>>({});
 
   const timeoutRef = React.useRef<Timeout>(null);
   const onHideRef = React.useRef<GenericFunction>(() => {});
@@ -120,17 +120,22 @@ export const NotyPortal: React.FC = () => {
           throw new Error("Registering an array of ids is not supported");
         }
 
-        popOverRef.current.push({ id, ...config });
+        popOverRef.current[id] = config;
       } else {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         if (1 === isVisible) await hide(HideTypes.MODAL_OVERRIDE);
 
         React.startTransition(() => {
-          setConfig(
-            typeof id === "string" //@ts-ignore
-              ? [popOverRef.current.find((v) => v.id === id)] //@ts-ignore
-              : (popOverRef.current.filter((v) => id.includes(v.id)) as any),
-          );
+          if (typeof id === "string" && popOverRef.current[id]) {
+            setConfig([{ id, ...popOverRef.current[id] }] as any);
+          } else {
+            const popovers = Object.entries(popOverRef.current);
+            setConfig(
+              popovers
+                .filter(([k]) => id.includes(k))
+                .map(([k, v]) => ({ id: k, ...v })) as any,
+            );
+          }
 
           setIsVisible(1);
         });
