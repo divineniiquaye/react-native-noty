@@ -1,7 +1,7 @@
 import React from "react";
 import {
   SafeAreaView as SafeAreaBase,
-  StyleSheet,
+  StatusBar,
   Dimensions,
   type ScaledSize,
   Platform,
@@ -12,12 +12,6 @@ import {
 const isIOS10 =
   Platform.OS === "ios" &&
   Platform.Version?.toString()?.split(".")?.[0] === "10";
-
-const s = StyleSheet.create({
-  statusBarPadding: {
-    paddingTop: 40,
-  },
-});
 
 interface StatusBarSpacerState {
   displayPadding: boolean;
@@ -49,7 +43,9 @@ class StatusBarSpacer extends React.Component<ViewProps, StatusBarSpacerState> {
     const { style, ...props } = this.props;
     const { displayPadding } = this.state;
     return (
-      <View style={[displayPadding && s.statusBarPadding, style]} {...props} />
+      <View style={[displayPadding && {
+        paddingTop: StatusBar.currentHeight ?? 32,
+      }, style]} {...props} />
     );
   }
 }
