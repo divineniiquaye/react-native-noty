@@ -1,10 +1,9 @@
-import { Animated, Platform, type ViewStyle } from "react-native";
+import { Animated, StyleSheet, View } from "react-native";
 import React from "react";
 
 import { DEFAULT_DURATION, HideTypes } from "../constants";
 import { ToastColor, type ToastProps } from "./types";
 import { type Timeout, timeout } from "../handler";
-import SafeAreaView from "../safeview";
 
 type Props = ToastProps & {
   setVisible: (visible: 0 | 1 | 2) => void;
@@ -22,14 +21,6 @@ const ToastComponent = (
     alertColors,
     visible,
     dismiss,
-    animatedViewProps,
-    animatedViewStyle,
-    springAnimationConfig = {
-      toValue: 0,
-      friction: 9,
-      useNativeDriver: false,
-      isInteraction: false,
-    },
   }: Props,
   ref: React.Ref<Timeout>,
 ) => {
@@ -37,78 +28,83 @@ const ToastComponent = (
 
   React.useEffect(() => {
     if (1 == visible) {
-      _animate(1);
+      Animated.timing(animatedValue.current, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(async () => {
+        await timeout(interval, ref as any);
+        Animated.timing(animatedValue.current, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          dismiss(HideTypes.AUTO_DISMISS);
+        });
+      });
     }
   }, [visible]);
 
-  function _animate(toValue = 0) {
-    springAnimationConfig.toValue = toValue;
-    Animated.spring(animatedValue.current, springAnimationConfig).start(
-      async ({ finished }) => {
-        if (finished && 1 === toValue && interval > 0) {
-          await timeout(interval, ref as any);
-          _animate(0); // animation before dismiss
-          dismiss(HideTypes.AUTO_DISMISS);
-        }
-      },
-    );
-  }
-
-  function _getSafeAreaStyle() {
-    let viewStyle: ViewStyle = {
-      flex: 0,
-      // fixed is available on web.
-      position: (Platform.OS === "web" ? "fixed" : "absolute") as "absolute",
-      top: "top" === position ? "5%" : "center" === position ? "42%" : undefined,
-      bottom: "bottom" === position ? "10%" : undefined,
-      alignSelf: "center",
-      zIndex: 999_999,
-      ...(Platform.OS === "web"
-        ? { overflow: "hidden", userSelect: "none" }
-        : null),
-    };
-
-    if ("bottom" === position) {
-      viewStyle.marginBottom = 20;
-    } else if ("top" === position) {
-      viewStyle.marginTop = 20;
+  function _getPositionStyle(position: string) {
+    switch (position) {
+      case "top":
+        return styles.top;
+      case "center":
+        return styles.center;
+      case "bottom":
+        return styles.bottom;
+      default:
+        return styles.center;
     }
-
-    return viewStyle;
-  }
-
-  function _getViewAnimatedStyle() {
-    const viewStyle: ViewStyle = {
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 9,
-      width: "100%",
-      elevation: 1,
-      padding: 12,
-      zIndex: 1,
-      backgroundColor: alertColors?.[type] ?? ToastColor?.[type],
-      opacity: animatedValue.current.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-      }),
-    };
-
-    return [viewStyle, animatedViewStyle];
   }
 
   return (
-    <SafeAreaView style={_getSafeAreaStyle()}>
-      {1 === visible && (
+    1 === visible && (
+      <View style={[styles.toastContainer, _getPositionStyle(position)]}>
         <Animated.View
-          style={_getViewAnimatedStyle()}
-          pointerEvents="box-none"
-          {...animatedViewProps}
+          style={[
+            styles.toast,
+            {
+              backgroundColor: alertColors?.[type] ?? ToastColor?.[type],
+              opacity: animatedValue.current.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+          ]}
         >
           {Component as any}
         </Animated.View>
-      )}
-    </SafeAreaView>
+      </View>
+    )
   );
 };
+
+const styles = StyleSheet.create({
+  toastContainer: {
+    position: "absolute",
+    alignItems: "center",
+    elevation: 999_999,
+    zIndex: 1000,
+    right: 0,
+    left: 0,
+  },
+  toast: {
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    paddingHorizontal: 20,
+    paddingVertical: 11,
+    borderRadius: 8,
+  },
+  top: {
+    top: "7%",
+  },
+  center: {
+    top: "50%",
+    transform: [{ translateY: -50 }],
+  },
+  bottom: {
+    bottom: "10%",
+  },
+});
 
 export default React.forwardRef(ToastComponent);

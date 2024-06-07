@@ -2,10 +2,10 @@ import { Animated, Appearance, type ColorValue, View } from "react-native";
 
 export const ToastColor = {
   default: "dark" === Appearance.getColorScheme() ? "#1B2534" : "#636975",
-  success: "#32a54a",
-  error: "#cc3232",
-  info: "#2b73b6",
-  warn: "#cd853f",
+  success: "#28A745",
+  error: "#D75640",
+  info: "#D1ECF1",
+  warn: "#FFF3CD",
 };
 
 export type ToastProps = {
