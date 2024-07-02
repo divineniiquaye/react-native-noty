@@ -4,27 +4,29 @@ import React from "react";
 export type NotificationViewProps = {
   title?: string;
   message?: string;
-  image?: ImageProps['source'],
+  image?: ImageProps["source"];
 
-  style?: View['props']['style'];
-  titleProps?: Text['props'];
-  messageProps?: Text['props'];
-  imageProps?: Omit<ImageProps, 'source'>;
-}
+  style?: View["props"]["style"];
+  titleProps?: Text["props"];
+  messageProps?: Text["props"];
+  imageProps?: Omit<ImageProps, "source">;
+};
 
 export const Notification: React.FC<NotificationViewProps> = (props) => {
-  const { style: imageStyle, ...imageProps } = props?.imageProps ?? { style: styles.image };
-  const { style: titleStyle, ...titleTextProps } = props?.titleProps ?? { style: styles.title };
-  const { style: messageStyle, ...messageTextProps } = props?.messageProps ?? { style: styles.message };
+  const { style: imageStyle, ...imageProps } = props?.imageProps ?? {
+    style: styles.image,
+  };
+  const { style: titleStyle, ...titleTextProps } = props?.titleProps ?? {
+    style: styles.title,
+  };
+  const { style: messageStyle, ...messageTextProps } = props?.messageProps ?? {
+    style: styles.message,
+  };
 
   return (
     <View style={[styles.container, props?.style]}>
       {props?.image && (
-        <Image
-          source={props.image}
-          style={imageStyle}
-          {...imageProps}
-        />
+        <Image source={props.image} style={imageStyle} {...imageProps} />
       )}
       {props?.title && (
         <Text
@@ -43,7 +45,7 @@ export const Notification: React.FC<NotificationViewProps> = (props) => {
         />
       )}
     </View>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
@@ -56,12 +58,13 @@ const styles = StyleSheet.create({
     width: 36,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 15,
+    fontWeight: "700",
+    color: "white",
+    marginBottom: 4,
   },
   message: {
-    fontSize: 16,
-    color: 'white',
+    fontSize: 14,
+    color: "white",
   },
 });
