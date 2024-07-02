@@ -10,8 +10,8 @@ import ToastComponent from "./toast/component";
 import {
   type ConfigProps,
   type IModal,
+  Noty,
   type Timeout,
-  notyModalRef,
   timeout,
 } from "./handler";
 
@@ -20,6 +20,9 @@ export { Notification } from "./notification";
 export { Noty, type ConfigProps } from "./handler";
 
 type GenericFunction = (props: any) => any;
+type Props = {
+  force?: boolean;
+};
 
 /**
  * @description A portal that should stay on the top of the app component hierarchy for the modal to be displayed.
@@ -37,11 +40,15 @@ type GenericFunction = (props: any) => any;
  * }
  * ```
  */
-export const NotyPortal: React.FC = () => {
+export const NotyPortal: React.FC = (props: Props) => {
   const [content, setContent] = React.useState<React.FC>(() => <></>);
   const [isVisible, setIsVisible] = React.useState<0 | 1 | 2>(0);
   const [config, setConfig] = React.useState<ConfigProps>();
   const popOverRef = React.useRef<Record<string, any>>({});
+
+  if (!Noty.ref.current || props?.force) {
+    Noty.ref = React.createRef();
+  }
 
   const timeoutRef = React.useRef<Timeout>(null);
   const onHideRef = React.useRef<GenericFunction>(() => {});
@@ -76,7 +83,7 @@ export const NotyPortal: React.FC = () => {
     [isVisible],
   );
 
-  React.useImperativeHandle(notyModalRef, () => ({
+  React.useImperativeHandle(Noty.ref, () => ({
     hide,
     show,
     toast: (component, config) =>

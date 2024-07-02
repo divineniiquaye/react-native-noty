@@ -20,6 +20,16 @@ export type ConfigProps = NotyComponents & {
 /** Same as NodeJS.Timeout to avoid build errors */
 export type Timeout = ReturnType<typeof setTimeout> | null;
 
+const getNotyRef = (): NonNullable<typeof Noty.ref.current> => {
+  if (!Noty.ref.current) {
+    throw new Error(
+      "NotyPortal not found. Please wrap your component with NotyPortal",
+    );
+  }
+
+  return Noty.ref.current;
+};
+
 /**
  * @description Shows a modal. If a modal is already present, it will be closed before displaying the new one.
  * @param component A function that returns a {@link React.FC} to be shown.
@@ -29,7 +39,7 @@ export type Timeout = ReturnType<typeof setTimeout> | null;
 const show = async <T = any>(
   component: React.FC,
   config?: ConfigProps | NotyComponents["type"],
-): Promise<T> => notyModalRef.current?.show<any>?.(component, config);
+): Promise<T> => getNotyRef().show<any>?.(component, config);
 
 /**
  * @description A modal for displaying notifications (top or bottom).
@@ -40,7 +50,7 @@ const show = async <T = any>(
 const notification = async <T = any>(
   component: React.FC | NotificationViewProps,
   config?: Omit<ConfigProps, "type" | "props"> & NotificationProps,
-): Promise<T> => notyModalRef.current?.notification<any>?.(component, config);
+): Promise<T> => getNotyRef().notification<any>?.(component, config);
 
 /**
  * @description A modal for displaying notifications (top, center or bottom).
@@ -51,7 +61,7 @@ const notification = async <T = any>(
 const modal = async <T = any>(
   component: React.FC | React.ReactNode,
   config?: ModalProps | "top" | "center" | "bottom",
-): Promise<T> => notyModalRef.current?.modal<any>?.(component, config);
+): Promise<T> => getNotyRef().modal<any>?.(component, config);
 
 /**
  * @description A modal for displaying toast (top, center or bottom).
@@ -62,12 +72,12 @@ const modal = async <T = any>(
 const toast = async <T = any>(
   component: React.FC | string,
   config?: ToastProps | "top" | "center" | "bottom",
-): Promise<T> => notyModalRef.current?.toast<any>?.(component, config);
+): Promise<T> => getNotyRef().toast<any>?.(component, config);
 
 const popover = async <T = any>(
   id: string | string[],
   config?: Omit<PopOverProps, "id" | "active" | "onShown" | "children">,
-): Promise<T> => notyModalRef.current?.popover<any>?.(id, config);
+): Promise<T> => getNotyRef().popover<any>?.(id, config);
 
 /**
  * @description Hide the current modal.
@@ -75,7 +85,7 @@ const popover = async <T = any>(
  * @returns {Promise<void>} Returns a promise that resolves when the close animation is finished.
  */
 const hide = async <T = any>(props?: T): Promise<void> =>
-  notyModalRef.current?.hide?.(props);
+  getNotyRef().hide?.(props);
 
 /**
  * @description Creates a promise that resolves after a given amount of time has passed.
@@ -100,8 +110,6 @@ export interface IModal {
   hide: typeof hide;
 }
 
-export const notyModalRef = React.createRef<IModal>();
-
 /**
  * @example
  * ```js
@@ -120,6 +128,7 @@ export const notyModalRef = React.createRef<IModal>();
  * ```
  */
 export const Noty = {
+  ref: { current: null } as React.RefObject<IModal>,
   show,
   modal,
   toast,
