@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import React from "react";
 
-import SafeAreaView from "../safeview";
 import type { ModalProps } from "./types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = ModalProps & {
   onBackdropPress: (event: GestureResponderEvent) => void;
@@ -31,8 +31,16 @@ const ModalComponent: React.FC<Props> = ({
   visible,
   ...props
 }) => {
+  const insets = useSafeAreaInsets();
   const modalStyle: View["props"]["style"] = {
     flex: 1,
+    paddingTop: "top" === position ? insets.top + 10 : undefined,
+    paddingBottom:
+      "bottom" === position
+        ? "ios" === Platform.OS
+          ? insets.bottom + 10
+          : insets.bottom || insets.top
+        : undefined,
     justifyContent:
       "top" === position
         ? "flex-start"
@@ -63,7 +71,7 @@ const ModalComponent: React.FC<Props> = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         pointerEvents="box-none"
       >
-        <SafeAreaView style={modalStyle}>
+        <View style={modalStyle}>
           <Pressable
             onPress={onBackdropPress}
             style={{
@@ -76,7 +84,7 @@ const ModalComponent: React.FC<Props> = ({
             }}
           />
           {Component as any}
-        </SafeAreaView>
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );

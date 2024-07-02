@@ -1,5 +1,4 @@
 import {
-  TouchableOpacity,
   Animated,
   StatusBar,
   PanResponder,
@@ -9,14 +8,15 @@ import {
   type LayoutChangeEvent,
   Platform,
   useWindowDimensions,
+  View,
 } from "react-native";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { DEFAULT_SWIPE_ENABLED, HideTypes } from "../constants";
 import { type Timeout, timeout } from "../handler";
 import type { NotificationProps } from "./types";
 import { ToastColor } from "../toast/types";
-import SafeAreaView from "../safeview";
 
 type Props = NotificationProps & {
   onPress?: () => void;
@@ -53,6 +53,7 @@ const NotificationComponent = (
   ref: React.Ref<Timeout>,
 ) => {
   const windowDimensions = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   const animatedValue = React.useRef(new Animated.Value(0));
   const [dimValue, setDimValue] = React.useState(0);
@@ -111,11 +112,13 @@ const NotificationComponent = (
 
   function _getViewAnimatedStyle() {
     let viewStyle: ViewStyle = {
+      backgroundColor: alertColors?.[type] ?? ToastColor[type] ?? "black",
       position: Platform.select({
         web: "fixed",
         default: "absolute",
       }) as "absolute",
       top: dimValue,
+      padding: 8,
       left: 0,
       right: 0,
       elevation: 1,
@@ -207,25 +210,21 @@ const NotificationComponent = (
       onLayout={(event) => _onLayout(event)}
       {...animatedViewProps}
     >
-      <TouchableOpacity
-        style={{
-          padding: 8,
-          backgroundColor: alertColors?.[type] ?? ToastColor[type] ?? "black",
-        }}
-        activeOpacity={0.95}
-      >
-        <SafeAreaView
-          style={
-            ["web", "android"].includes(Platform.OS) &&
-            position === "bottom" && {
-              paddingVertical: 8,
-              paddingTop: 0,
-            }
-          }
-        >
-          {Component as any}
-        </SafeAreaView>
-      </TouchableOpacity>
+      <View
+        style={
+          "top" === position
+            ? { paddingTop: insets.top }
+            : "bottom" === position
+              ? {
+                  paddingVertical:
+                    "ios" === Platform.OS
+                      ? insets.bottom
+                      : (insets.bottom || insets.top) / 2,
+                }
+              : undefined
+        }
+        children={Component as any}
+      />
     </Animated.View>
   );
 };

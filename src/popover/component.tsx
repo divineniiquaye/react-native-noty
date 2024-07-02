@@ -1,3 +1,4 @@
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Animated,
   BackHandler,
@@ -17,7 +18,6 @@ import React from "react";
 import { HideTypes } from "../constants";
 import { getCoordinates, getPosition, RENDER_BOUNDARY } from "./utils";
 import { type Timeout, timeout } from "../handler";
-import SafeAreaView from "../safeview";
 import type { PopOverProps } from ".";
 
 type Config = Omit<PopOverProps, "active" | "onDismiss"> & {
@@ -36,6 +36,7 @@ const PopOverComponent = (
   ref: React.Ref<Timeout>,
 ) => {
   const [state, setState] = React.useState<Record<string, any>>({ next: 0 });
+  const insets = useSafeAreaInsets();
   const theme = useColorScheme();
 
   const animation = new Animated.Value(0);
@@ -329,11 +330,11 @@ const PopOverComponent = (
         }
       }}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, ...insets }}>
         {_renderOverlay()}
         {_renderPopOver()}
         {state.coordinates && _renderItem()}
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 };

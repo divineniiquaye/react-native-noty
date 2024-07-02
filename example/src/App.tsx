@@ -1,6 +1,5 @@
 import {
   Button,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,6 +7,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import { NotyPortal, Noty, PopOver } from "react-native-noty";
 import { ExampleModal } from "./components/ExampleModal";
@@ -18,7 +18,7 @@ export default function App() {
   const [tipMode, setTipMode] = React.useState(false);
 
   return (
-    <React.Fragment>
+    <SafeAreaProvider>
       <NotyPortal />
       <SafeAreaView style={styles.container}>
         {tipMode ? (
@@ -42,7 +42,8 @@ export default function App() {
               {
                 title: "A pressable tip",
                 body: "I become pressable if you set an action for me using: onPress().",
-                onPress: (t: any) => "default" === t && Noty.toast("Popover pressed!", "top"),
+                onPress: (t: any) =>
+                  "default" === t && Noty.toast("Popover pressed!", "top"),
                 position: { top: 300, left: 150 },
                 label: "center",
                 align: "center",
@@ -152,7 +153,10 @@ export default function App() {
                 onPress={async () => {
                   notyCount.current++;
                   const result = await Noty.notification(
-                    { message: `Hello World ${notyCount.current}` },
+                    {
+                      title: "Hello World",
+                      message: `Noty Hello World ${notyCount.current}`,
+                    },
                     { type: notyCount.current % 2 === 0 ? "success" : "error" },
                   );
                   console.log("Result--", result);
@@ -216,7 +220,7 @@ export default function App() {
           </React.Fragment>
         )}
       </SafeAreaView>
-    </React.Fragment>
+    </SafeAreaProvider>
   );
 }
 
